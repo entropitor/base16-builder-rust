@@ -295,7 +295,10 @@ fn git_clone(url: String, path: String) {
                         .find_remote("origin")
                         .unwrap()
                         .fetch(&["master"], None, None);
-                    let oid = repo.refname_to_id("refs/remotes/origin/master").unwrap();
+                    let oid = repo
+                        .refname_to_id("refs/remotes/origin/master")
+                        .or(repo.refname_to_id("refs/remotes/origin/main"))
+                        .unwrap();
                     let object = repo.find_object(oid, None).unwrap();
                     repo.reset(&object, git2::ResetType::Hard, None).unwrap()
                 }
